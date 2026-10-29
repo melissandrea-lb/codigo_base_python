@@ -5,12 +5,13 @@ def analizar_token(cadena):
     estado = 0
     i = 0
     operadores = {'+', '-', '*', '/', '=', '<', '>', '%'}
+    palabras_reservadas = {'if', 'else', 'while', 'for'}
     while i < len(cadena):
         c = cadena[i]
         if estado == 0:
             if c.isalpha() or c == '_':
-                estado = 1 # Estado para Identificador
-            elif c.isdigit():
+                estado = 1 # Estado para Identificador o palabra reservada
+            elif c.isdigit() or c == '-':
                 estado = 2 # Estado para Número (Entero)
             elif c in operadores:
                 estado = 4 # Estado para Operador
@@ -32,6 +33,8 @@ def analizar_token(cadena):
             i += 1
 # Clasificación final según el estado en el que terminó
         if estado == 1:
+            if cadena in palabras_reservadas:
+                return "Palabra reservada válida"
             return "Identificador válido"
         elif estado in (2, 3):
             return "Número válido"
@@ -39,6 +42,6 @@ def analizar_token(cadena):
             return "Operador válido"
         return "Cadena no válida"
 # --- Pruebas ---
-entradas = ["variable1+", "125", "45.67", "+", "_contador", "99num", "++"]
+entradas = ["variable1+", "125", "45.67", "+", "_contador", "99num", "++", "if", "-125", "-45.67"]
 for e in entradas:
     print(f"'{e}' -> {analizar_token(e)}")
